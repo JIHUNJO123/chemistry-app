@@ -139,18 +139,32 @@ struct PeriodicTableGrid: View {
 struct ElementCell: View {
     let element: Element
     
+    private var massText: String {
+        if element.atomicMass < 10 {
+            return String(format: "%.2f", element.atomicMass)
+        } else if element.atomicMass < 100 {
+            return String(format: "%.1f", element.atomicMass)
+        } else {
+            return String(format: "%.0f", element.atomicMass)
+        }
+    }
+    
     var body: some View {
-        VStack(spacing: 1) {
+        VStack(spacing: 0) {
             Text("\(element.atomicNumber)")
-                .font(.system(size: 8))
+                .font(.system(size: 7))
                 .foregroundColor(.white.opacity(0.8))
             
             Text(element.symbol)
-                .font(.system(size: 14, weight: .bold))
+                .font(.system(size: 13, weight: .bold))
                 .foregroundColor(.white)
             
-            Text(element.name)
+            Text(massText)
                 .font(.system(size: 6))
+                .foregroundColor(.white.opacity(0.9))
+            
+            Text(element.name)
+                .font(.system(size: 5))
                 .foregroundColor(.white.opacity(0.8))
                 .lineLimit(1)
         }

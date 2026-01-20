@@ -9,16 +9,47 @@ import SwiftUI
 import WebKit
 
 struct VideosView: View {
-    @State private var videos: [ChemistryVideo] = ChemistryVideo.sampleVideos
     @State private var selectedVideo: ChemistryVideo?
+    @State private var expandedCategories: Set<String> = ["Chemical Bonding", "Basics"]
+    
+    private var categories: [String] {
+        let allCategories = ChemistryVideo.sampleVideos.map { $0.category }
+        return Array(Set(allCategories)).sorted()
+    }
+    
+    private func videos(for category: String) -> [ChemistryVideo] {
+        ChemistryVideo.sampleVideos.filter { $0.category == category }
+    }
     
     var body: some View {
         NavigationView {
-            List(videos) { video in
-                VideoRow(video: video)
-                    .onTapGesture {
-                        selectedVideo = video
+            List {
+                ForEach(categories, id: \.self) { category in
+                    Section {
+                        if expandedCategories.contains(category) {
+                            ForEach(videos(for: category)) { video in
+                                VideoRow(video: video)
+                                    .onTapGesture {
+                                        selectedVideo = video
+                                    }
+                            }
+                        }
+                    } header: {
+                        CategoryHeader(
+                            title: category,
+                            isExpanded: expandedCategories.contains(category),
+                            onTap: {
+                                withAnimation {
+                                    if expandedCategories.contains(category) {
+                                        expandedCategories.remove(category)
+                                    } else {
+                                        expandedCategories.insert(category)
+                                    }
+                                }
+                            }
+                        )
                     }
+                }
             }
             .listStyle(PlainListStyle())
             .navigationTitle("Videos")
@@ -27,6 +58,36 @@ struct VideosView: View {
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+    }
+}
+
+// MARK: - Category Header
+struct CategoryHeader: View {
+    let title: String
+    let isExpanded: Bool
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack {
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                
+                Spacer()
+                
+                HStack(spacing: 4) {
+                    Text(isExpanded ? "Retract" : "Expand")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding(.vertical, 8)
+        }
     }
 }
 
@@ -44,6 +105,7 @@ struct ChemistryVideo: Identifiable {
     }
     
     static let sampleVideos: [ChemistryVideo] = [
+        // Basics
         ChemistryVideo(
             title: "Introduction to the Periodic Table",
             description: "Learn the basics of the periodic table and how elements are organized.",
@@ -52,12 +114,28 @@ struct ChemistryVideo: Identifiable {
             category: "Basics"
         ),
         ChemistryVideo(
+            title: "States of Matter",
+            description: "Understanding solids, liquids, gases and phase transitions.",
+            youtubeID: "pKvo0XWZtjo",
+            duration: "11:20",
+            category: "Basics"
+        ),
+        // Chemical Bonding
+        ChemistryVideo(
             title: "Chemical Bonding Explained",
             description: "Understanding ionic, covalent, and metallic bonds.",
             youtubeID: "CGA8sRwqIFg",
             duration: "15:22",
-            category: "Bonding"
+            category: "Chemical Bonding"
         ),
+        ChemistryVideo(
+            title: "Covalent vs Ionic Bonds",
+            description: "The key differences between covalent and ionic bonding.",
+            youtubeID: "Xz6rW9gfCPM",
+            duration: "13:45",
+            category: "Chemical Bonding"
+        ),
+        // Reactions
         ChemistryVideo(
             title: "Balancing Chemical Equations",
             description: "Step by step guide to balancing chemical equations.",
@@ -65,6 +143,7 @@ struct ChemistryVideo: Identifiable {
             duration: "10:45",
             category: "Reactions"
         ),
+        // Acids & Bases
         ChemistryVideo(
             title: "Acids and Bases",
             description: "Learn about pH, acids, bases, and neutralization reactions.",
@@ -72,12 +151,20 @@ struct ChemistryVideo: Identifiable {
             duration: "18:30",
             category: "Acids & Bases"
         ),
+        // Organic Chemistry
         ChemistryVideo(
             title: "Organic Chemistry Basics",
             description: "Introduction to carbon compounds and functional groups.",
             youtubeID: "GQynrcpBABA",
             duration: "20:15",
-            category: "Organic"
+            category: "Organic Chemistry"
+        ),
+        ChemistryVideo(
+            title: "Functional Groups Overview",
+            description: "Learn about alcohols, aldehydes, ketones, and more.",
+            youtubeID: "VkPkwmOJe6w",
+            duration: "16:40",
+            category: "Organic Chemistry"
         )
     ]
 }
