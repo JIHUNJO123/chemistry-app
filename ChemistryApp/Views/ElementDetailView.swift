@@ -47,23 +47,27 @@ struct ElementHeaderCard: View {
     let element: Element
     
     var body: some View {
-        VStack(spacing: 16) {
-            // Symbol
+        VStack(spacing: 12) {
+            // Atomic Number (top)
+            Text("\(element.atomicNumber)")
+                .font(.system(size: 24, weight: .medium))
+                .foregroundColor(.white.opacity(0.9))
+            
+            // Symbol (center, large)
             Text(element.symbol)
                 .font(.system(size: 80, weight: .bold))
                 .foregroundColor(.white)
             
-            // Name and Atomic Number
-            VStack(spacing: 4) {
-                Text(element.name)
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                
-                Text("Atomic Number: \(element.atomicNumber)")
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.8))
-            }
+            // Atomic Mass (below symbol)
+            Text(String(format: "%.4f", element.atomicMass))
+                .font(.system(size: 20, weight: .medium))
+                .foregroundColor(.white.opacity(0.9))
+            
+            // Element Name
+            Text(element.name)
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
             
             // Category Badge
             Text(element.category.rawValue)
