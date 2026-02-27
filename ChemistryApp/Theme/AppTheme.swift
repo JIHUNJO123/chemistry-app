@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct AppTheme {
-    // MARK: - Colors (Easy to change later)
-    static let primaryColor = Color(red: 0.2, green: 0.5, blue: 0.8) // Blue
-    static let secondaryColor = Color(red: 0.3, green: 0.7, blue: 0.5) // Green
+    // MARK: - Colors (Matching Easy Chem logo)
+    static let primaryColor = Color(red: 0.12, green: 0.29, blue: 0.53) // Navy Blue (#1E4A87)
+    static let secondaryColor = Color(red: 0.2, green: 0.4, blue: 0.7) // Light Blue
     static let backgroundColor = Color(UIColor.systemBackground)
     static let cardBackground = Color(UIColor.secondarySystemBackground)
     
-    // MARK: - App Info (Easy to change later)
-    static let appName = "Chemistry App"
+    // MARK: - App Info
+    static let appName = "Easy Chem"
     static let appVersion = "1.0.0"
     
     // MARK: - Fonts
